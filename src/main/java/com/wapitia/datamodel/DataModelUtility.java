@@ -165,7 +165,10 @@ public class DataModelUtility {
             bldr.append(colName).append("=").append(value == null ? "null" : value.toString());
     }
 
-    public static void textCommaSep(StringBuilder target, Consumer<StringBuilder> ... bldrs) {
+    @SafeVarargs
+    public static void textCommaSep(StringBuilder target,
+        Consumer<StringBuilder> ... bldrs)
+    {
         commaSepTextConsumer(bldrs).accept(target);
     }
 
