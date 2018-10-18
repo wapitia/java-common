@@ -111,4 +111,56 @@ public class Collections {
 
     }
 
+    /** Get the optional first element of the chosen list, wrapped
+     *  as an Optional. Does not complain if there are multiple elements
+     *  in the list.
+     *
+     *  <p>Functional definition:
+     *  <pre>
+     *    def optionalOfSingle<A>(a: List) = a match {
+     *      case h :: _ => Some(h)
+     *      case _      => None
+     *    }
+     *  </pre>
+     *
+     *  @param list Collection from which to pull the first element. must not be null.
+     *  @return Some first element of list or None if list is empty.
+     */
+    public static <A> Optional<A> firstOfList(List<A> list) {
+        final Optional<A> result;
+        if (list.isEmpty())
+            result = Optional.empty();
+        else
+            result = Optional.of(list.get(0));
+        return result;
+    }
+
+    /** Get the optional first element of the chosen list, wrapped
+     *  as an Optional. Throws a RuntimeException if there are multiple
+     *  items in the list.
+     *
+     *  <p>Functional definition:
+     *  <pre>
+     *    def optionalOfSingle<A>(a: List) = a match {
+     *      case _ :: _ :: _ => throw new RuntimeException("...")
+     *      case h ::       _ => Some(h)
+     *      case _            => None
+     *    }
+     *  </pre>
+     *
+     *  @param list Collection from which to pull the first element. must not be null.
+     *  @return Some first element of list or None if list is empty.
+     *  @throws RuntimeException if there are multiple items in the list
+     */
+    public static <A> Optional<A> asSingleton(List<A> list) {
+        final Optional<A> result;
+        if (list.isEmpty())
+            result = Optional.empty();
+        else if (list.size() == 1)
+            result = Optional.of(list.get(0));
+        else
+            throw new RuntimeException("List has multiple elements.");
+        return result;
+    }
+
 }
