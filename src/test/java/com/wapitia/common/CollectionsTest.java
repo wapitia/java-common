@@ -7,12 +7,18 @@ import java.util.Map;
 import org.junit.Assert;
 import org.junit.Test;
 
+/**
+ *
+ */
 public class CollectionsTest {
 
+	/**
+	 *
+	 */
 	@Test
 	public void testMapOfLists() {
 		Map<Integer,List<String>> myMap = new HashMap<>();
-		
+
 		Collections.addToMapOfLists(myMap, 23, "Twenty-Three A");
 		Collections.addToMapOfLists(myMap, 23, "Twenty-Three B");
 		Collections.addToMapOfLists(myMap, 129, "One-Twenty-Nine A");

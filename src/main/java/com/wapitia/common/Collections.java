@@ -31,6 +31,10 @@ public class Collections {
      * given value is appended to the list in the map for a given key K. If the
      * entry does not yet exist, a new ArrayList is created for that slot and value
      * becomes the first and only entry in the new list.
+     *
+     * @param map target for addition
+     * @param key map slot in which to add
+     * @param value value to add to list value at key
      */
     public static <K, V> void addToMapOfLists(Map<K, List<V>> map, K key, V value) {
         addToMapOfLists(map, key, value, (K k) -> new ArrayList<>());
@@ -43,6 +47,11 @@ public class Collections {
      * entry does not yet exist, the given listMaker supplier of Lists will be
      * invoked to create a new list for that slot and the value becomes the first
      * and only entry in the new list.
+     *
+     * @param map target for addition
+     * @param key map slot in which to add
+     * @param value value to add to list value at key
+     * @param listMaker maker of lists for new map values
      */
     public static <K, V> void addToMapOfLists(Map<K, List<V>> map, K key, V value,
             Function<K, List<V>> listMaker) {
@@ -63,6 +72,8 @@ public class Collections {
      * @param defaultValueProvider function taking a key to generate and return a
      *                             default value when there is not a pre-existing
      *                             value at key in the map.
+     * @return the map value at that key or whats provided by the
+     *             defaultValueProvider
      */
     public static <K, C> C getOrCreateMapValue(Map<K, C> map, K key,
             Function<K, C> defaultValueProvider) {

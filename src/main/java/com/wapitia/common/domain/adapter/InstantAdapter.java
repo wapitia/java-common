@@ -3,13 +3,18 @@ package com.wapitia.common.domain.adapter;
 import java.time.Instant;
 import java.time.format.DateTimeFormatter;
 import javax.xml.bind.annotation.adapters.XmlAdapter;
-//import org.slf4j.Logger;
-//import org.slf4j.LoggerFactory;
 
+/** Covert to and from an Xml xs:dateTime type and a java.time.Instant
+ *  This is immutable and thread-safe, and a singleton can be accessed
+ *  via the {@link #instance()} method.
+ */
 public class InstantAdapter extends XmlAdapter<String,Instant> {
 
     private final DateTimeFormatter formatter;
 
+    /** Uses a {@link DateTimeFormatter}, which is thread-safe and reusable,
+     *  so use the InstantAdapter singleton via the {@link #instance()} call.
+     */
     public InstantAdapter() {
 
         this.formatter = DateTimeFormatter.ISO_INSTANT;
@@ -29,15 +34,26 @@ public class InstantAdapter extends XmlAdapter<String,Instant> {
         static InstantAdapter instance = new InstantAdapter();
     }
 
+    /** @return the InstanceAdapter
+     */
     public static InstantAdapter instance() {
         return Holder.instance;
     }
 
-    public static Instant parse(String stringValue) {
-        return instance().unmarshal(stringValue);
+    /** Parse a xs:dateTime string into its corresponding Instant.
+     *  @param dateTimeString string in xs:dateTime format.
+     *  @return Instant matching dateTimeString
+     */
+    public static Instant parse(String dateTimeString) {
+        return instance().unmarshal(dateTimeString);
     }
 
-    public static String print(Instant value) {
-        return instance().marshal(value);
+    /** Convert the Instant to a xs:dateTime string via the
+     *  {@link DateTimeFormatter#ISO_INSTANT} formatter.
+     *  @param instant Instant to covert to string. returns null if this is null
+     *  @return the corresponding String, or null if instant is null
+     */
+    public static String print(Instant instant) {
+        return instance().marshal(instant);
     }
 }

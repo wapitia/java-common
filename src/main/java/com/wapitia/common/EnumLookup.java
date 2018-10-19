@@ -32,7 +32,10 @@ public class EnumLookup<V extends Enum<V>> {
     /** Holds both enum names and upper-case enum names, in case they are different. */
     private final Map<String,V> byName;
 
-    /** Constructor takes a list of Enum values, and maps them by name. */
+    /** Constructor takes a list of Enum values, and maps them by name.
+     *
+     *  @param list A list of enum elements from the enum's values().
+     */
     public EnumLookup(V[] list) {
         Objects.requireNonNull(list);
         this.byName = new HashMap<String,V>(list.length);
@@ -44,6 +47,9 @@ public class EnumLookup<V extends Enum<V>> {
 
     /** Return Some Enum value corresponding to the name, or None if it doesn't exist.
      *  The case match of the name must be exact.
+     *
+     * @param name enum name to look for
+     * @return Enum value if found.
      */
     public Optional<V> byName(String name) {
         return Optional.ofNullable(byName.get(name));
@@ -51,6 +57,9 @@ public class EnumLookup<V extends Enum<V>> {
 
     /** Return Some Enum value corresponding to the name, or None if it doesn't exist.
      *  The lookup is case-insensitive.
+     *
+     * @param name case insensitive enum name to look for
+     * @return Enum value if found
      */
     public Optional<V> byNameCaseInsensitive(String name) {
         return Optional.ofNullable(byName
