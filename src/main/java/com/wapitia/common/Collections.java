@@ -174,4 +174,6 @@ public class Collections {
         return result;
     }
 
+    /** Factory class is not to be instantiated */
+    private Collections() {}
 }
