@@ -27,7 +27,7 @@ public class Collections {
 
     /**
      * Add a new list item to a list in a map for a particular key. The map is of
-     * the form `Map<K,List<V>>` for keys of type `K` and values of type `V`. The
+     * the form {@code Map<K,List<V>>} for keys of type `K` and values of type `V`. The
      * given value is appended to the list in the map for a given key K. If the
      * entry does not yet exist, a new ArrayList is created for that slot and value
      * becomes the first and only entry in the new list.
@@ -42,7 +42,7 @@ public class Collections {
 
     /**
      * Add a new list item to a list in a map for a particular key. The map is of
-     * the form `Map<K,List<V>>` for keys of type `K` and values of type `V`. The
+     * the form {@code Map<K,List<V>>} for keys of type `K` and values of type `V`. The
      * given value is appended to the list in the map for a given key K. If the
      * entry does not yet exist, the given listMaker supplier of Lists will be
      * invoked to create a new list for that slot and the value becomes the first
@@ -127,12 +127,12 @@ public class Collections {
      *  in the list.
      *
      *  <p>Functional definition:
-     *  <pre>
+     *  <pre>{@code
      *    def optionalOfSingle<A>(a: List) = a match {
      *      case h :: _ => Some(h)
      *      case _      => None
      *    }
-     *  </pre>
+     *  }</pre>
      *
      *  @param list Collection from which to pull the first element. must not be null.
      *  @return Some first element of list or None if list is empty.
@@ -151,13 +151,13 @@ public class Collections {
      *  items in the list.
      *
      *  <p>Functional definition:
-     *  <pre>
+     *  <pre>{@code
      *    def optionalOfSingle<A>(a: List) = a match {
      *      case _ :: _ :: _ => throw new RuntimeException("...")
      *      case h ::       _ => Some(h)
      *      case _            => None
      *    }
-     *  </pre>
+     *  }</pre>
      *
      *  @param list Collection from which to pull the first element. must not be null.
      *  @return Some first element of list or None if list is empty.

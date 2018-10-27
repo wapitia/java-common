@@ -9,6 +9,10 @@ import java.util.Optional;
 /** Provides a lookup by name of an enum string without
  *  having an exception thrown, as does Enum.valueOf()
  *  <p>
+ *  The typical usage is to embed a static instance of EnumLookup in the
+ *  enum itself, then having a static method also in the enum to perform
+ *  the lookup, as shown.
+ *  <p>
  *  Usage:
  *  <pre>
     import com.wapitia.common.EnumLookup;
@@ -25,21 +29,24 @@ import java.util.Optional;
         }
     }
  *  </pre>
- *  @param <V> Enum type
+ *
+ *  @param <E> Enum type, extends {@code Enum<E>}
  */
-public class EnumLookup<V extends Enum<V>> {
+public class EnumLookup<E extends Enum<E>> {
 
     /** Holds both enum names and upper-case enum names, in case they are different. */
-    private final Map<String,V> byName;
+    private final Map<String,E> byName;
 
     /** Constructor takes a list of Enum values, and maps them by name.
+     *  This typically is provided by the enum's {@code values()}
+     *  static function.
      *
-     *  @param list A list of enum elements from the enum's values().
+     *  @param list A list of enum elements from the enum's values() function.
      */
-    public EnumLookup(V[] list) {
+    public EnumLookup(E[] list) {
         Objects.requireNonNull(list);
-        this.byName = new HashMap<String,V>(list.length);
-        for (V item: list) {
+        this.byName = new HashMap<String,E>(list.length);
+        for (E item: list) {
             byName.put(item.name(), item);
             byName.put(item.name().toUpperCase(Locale.ENGLISH), item);
         }
@@ -51,7 +58,7 @@ public class EnumLookup<V extends Enum<V>> {
      * @param name enum name to look for
      * @return Enum value if found.
      */
-    public Optional<V> byName(String name) {
+    public Optional<E> byName(String name) {
         return Optional.ofNullable(byName.get(name));
     }
 
@@ -61,7 +68,7 @@ public class EnumLookup<V extends Enum<V>> {
      * @param name case insensitive enum name to look for
      * @return Enum value if found
      */
-    public Optional<V> byNameCaseInsensitive(String name) {
+    public Optional<E> byNameCaseInsensitive(String name) {
         return Optional.ofNullable(byName
             .get(name.toUpperCase(Locale.ENGLISH)));
     }
