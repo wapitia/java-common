@@ -10,24 +10,34 @@ import javax.xml.bind.annotation.adapters.XmlAdapter;
  */
 public class InstantAdapter extends XmlAdapter<String,Instant> {
 
-    private final DateTimeFormatter formatter;
+    private static final DateTimeFormatter formatter = DateTimeFormatter.ISO_INSTANT;
 
-    /** Uses a {@link DateTimeFormatter}, which is thread-safe and reusable,
-     *  so use the InstantAdapter singleton via the {@link #instance()} call.
+    /** Uses a static {@link DateTimeFormatter} which is thread-safe and
+     *  reusable, so use the InstantAdapter singleton via the
+     *  {@link #instance()} call.
      */
     public InstantAdapter() {
-
-        this.formatter = DateTimeFormatter.ISO_INSTANT;
     }
 
+    /** Parse a xs:dateTime string into its corresponding Instant.
+     *  @param stringValue string in xs:dateTime format.
+     *  @return Instant matching dateTimeString
+     *  @see javax.xml.bind.annotation.adapters.XmlAdapter#unmarshal(java.lang.Object)
+     */
     @Override
     public Instant unmarshal(String stringValue) {
-        return stringValue != null ? formatter.parse(stringValue, Instant::from) : null;
+        return parse(stringValue);
     }
 
+    /** Convert the Instant to a xs:dateTime string via the
+     *  {@link DateTimeFormatter#ISO_INSTANT} formatter.
+     *  @param instant Instant to covert to string. returns null if this is null
+     *  @return the corresponding String, or null if instant is null
+     *  @see javax.xml.bind.annotation.adapters.XmlAdapter#marshal(java.lang.Object)
+     */
     @Override
-    public String marshal(Instant value) {
-        return value != null ? formatter.format(value) : null;
+    public String marshal(Instant instant) {
+        return print(instant);
     }
 
     private static class Holder {
@@ -41,11 +51,11 @@ public class InstantAdapter extends XmlAdapter<String,Instant> {
     }
 
     /** Parse a xs:dateTime string into its corresponding Instant.
-     *  @param dateTimeString string in xs:dateTime format.
+     *  @param stringValue string in xs:dateTime format.
      *  @return Instant matching dateTimeString
      */
-    public static Instant parse(String dateTimeString) {
-        return instance().unmarshal(dateTimeString);
+    public static Instant parse(String stringValue) {
+        return stringValue != null ? formatter.parse(stringValue, Instant::from) : null;
     }
 
     /** Convert the Instant to a xs:dateTime string via the
@@ -54,6 +64,6 @@ public class InstantAdapter extends XmlAdapter<String,Instant> {
      *  @return the corresponding String, or null if instant is null
      */
     public static String print(Instant instant) {
-        return instance().marshal(instant);
+        return instant != null ? formatter.format(instant) : null;
     }
 }
