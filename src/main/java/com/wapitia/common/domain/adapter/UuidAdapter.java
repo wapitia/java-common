@@ -1,6 +1,5 @@
 package com.wapitia.common.domain.adapter;
 
-import java.time.format.DateTimeFormatter;
 import java.util.UUID;
 
 import javax.xml.bind.annotation.adapters.XmlAdapter;
@@ -12,54 +11,69 @@ import javax.xml.bind.annotation.adapters.XmlAdapter;
 public class UuidAdapter extends XmlAdapter<String,UUID> {
 
 
-    /** Uses a {@link DateTimeFormatter}, which is thread-safe and reusable,
-     *  so use the InstantAdapter singleton via the {@link #instance()} call.
+    /** Thread-safe and reusable,
+     *  so use the UuidAdapter singleton via the {@link #instance()} call.
      */
     public UuidAdapter() {
-
     }
 
-    /** Convert from a UUID string into the UUID type
+    /** Convert a xs:ID into the UUID type.
      *
      *  @param uuidString string value of the form "8249c7f9-1ca2-4142-952a-3f68f301b5da"
      *  @return a UUID representing the string
      *  @throws IllegalArgumentException If name does not conform to the string
      *              representation as described in {@link UUID#toString()}.
+     *  @see javax.xml.bind.annotation.adapters.XmlAdapter#unmarshal(java.lang.Object)
      */
     @Override
     public UUID unmarshal(String uuidString) {
-        return UUID.fromString(uuidString);
+        return parse(uuidString);
     }
 
+    /** Convert from a UUID into a xs:ID String type.
+     *
+     *  @param uuid string value of the form "8249c7f9-1ca2-4142-952a-3f68f301b5da"
+     *  @return a UUID representing the string
+     *  @throws IllegalArgumentException If name does not conform to the string
+     *              representation as described in {@link UUID#toString()}.
+     *  @see javax.xml.bind.annotation.adapters.XmlAdapter#marshal(java.lang.Object)
+     */
     @Override
     public String marshal(UUID uuid) {
-        return uuid.toString();
+        return print(uuid);
     }
 
     private static class Holder {
         static UuidAdapter instance = new UuidAdapter();
     }
 
-    /** @return the InstanceAdapter
+    /** The instance of this UuidAdapter.
+     *
+     *  @return the UuidAdapter instance
      */
     public static UuidAdapter instance() {
         return Holder.instance;
     }
 
-    /** Parse a xs:dateTime string into its corresponding Instant.
-     *  @param dateTimeString string in xs:dateTime format.
-     *  @return Instant matching dateTimeString
+    /** Convert a xs:ID into the UUID type.
+     *
+     *  @param uuidString string value of the form "8249c7f9-1ca2-4142-952a-3f68f301b5da"
+     *  @return a UUID representing the string
+     *  @throws IllegalArgumentException If name does not conform to the string
+     *              representation as described in {@link UUID#toString()}.
      */
-    public static UUID parse(String dateTimeString) {
-        return instance().unmarshal(dateTimeString);
+    public static UUID parse(String uuidString) {
+        return uuidString != null ? UUID.fromString(uuidString) : (UUID) null;
     }
 
-    /** Convert the Instant to a xs:dateTime string via the
-     *  {@link DateTimeFormatter#ISO_INSTANT} formatter.
-     *  @param instant Instant to covert to string. returns null if this is null
-     *  @return the corresponding String, or null if instant is null
+    /** Convert from a UUID into a xs:ID String type.
+     *
+     *  @param uuid string value of the form "8249c7f9-1ca2-4142-952a-3f68f301b5da"
+     *  @throws IllegalArgumentException If name does not conform to the string
+     *              representation as described in {@link UUID#toString()}.
+     *  @return the corresponding String, or null if uuid is null
      */
-    public static String print(UUID instant) {
-        return instance().marshal(instant);
+    public static String print(UUID uuid) {
+        return uuid != null ? uuid.toString() : (String) null;
     }
 }

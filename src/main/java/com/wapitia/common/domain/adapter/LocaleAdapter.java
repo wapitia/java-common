@@ -28,8 +28,7 @@ public class LocaleAdapter extends XmlAdapter<String, Locale>
      */
     @Override
     public String marshal(Locale locale) {
-        return locale == null ? (String) null
-            : trunc(locale.toLanguageTag(), LocaleLength);
+        return print(locale);
     }
 
     /** Convert a String to a Locale via a call to
@@ -37,25 +36,40 @@ public class LocaleAdapter extends XmlAdapter<String, Locale>
      */
     @Override
     public Locale unmarshal(String localeLanguageTag) {
-        return localeLanguageTag == null ? (Locale) null
-            : Locale.forLanguageTag(localeLanguageTag);
+        return parse(localeLanguageTag);
     }
 
     /** Truncate language tag according to
      *  <a href="https://tools.ietf.org/html/bcp47#section-4.4.2">
      *    bcp47 section 4.4.2</a>.
+     *  This says to truncate the language tag down to some maximum length
+     *  by repeatedly stripping off trailing sections that are separated by
+     *  "-" until it fits into the {@code maxLength}.
+     *  At a {@code maxLength} of 35 none of this should happen.
+     *
+     *  @param langTag Locale language tag of the form "en-US"
+     *  @param maxLength maximum length of return string
+     *  @return the incoming {@code langTag}, truncated if too long.
      */
-    static String trunc(String langTag, int maxlength) {
-        if (langTag.length() <= maxlength)
-            // okay
-            return langTag;
+    public static String trunc(String langTag, int maxLength) {
+        final String result;
+        if (langTag.length() <= maxLength)
+            // okay, no truncation necessary.
+            result = langTag;
         else if (langTag.contains("-")) {
-            int whereDash = langTag.lastIndexOf('-');
-            return langTag.substring(0, whereDash);
-        }
-        else
-            // no dash in long length, force truncate
-            return langTag.substring(0, maxlength);
+            // strip away the last dash and everything after it
+            String truncated = langTag.substring(0, langTag.lastIndexOf('-'));
+            // then truncate single character suffixes, like "-x"
+            int lastDash = truncated.lastIndexOf("-");
+            if (lastDash == truncated.length() - 2) {
+                truncated = truncated.substring(0, lastDash);
+            }
+            // recurse with truncated value
+            result = trunc(truncated, maxLength);
+        } else
+            // no dash in long length, force truncate. This shouldn't happen.
+            result = langTag.substring(0, maxLength);
+        return result;
     }
 
     private static class Holder {
@@ -73,7 +87,8 @@ public class LocaleAdapter extends XmlAdapter<String, Locale>
      *  @return Locale matching localeLanguageTag
      */
     public static Locale parse(String localeLanguageTag) {
-        return instance().unmarshal(localeLanguageTag);
+        return localeLanguageTag == null ? (Locale) null
+            : Locale.forLanguageTag(localeLanguageTag);
     }
 
     /** Convert the Locale to a xs:string string.
@@ -81,7 +96,8 @@ public class LocaleAdapter extends XmlAdapter<String, Locale>
      *  @return the corresponding String, or null if instant is null
      */
     public static String print(Locale locale) {
-        return instance().marshal(locale);
+        return locale == null ? (String) null
+            : trunc(locale.toLanguageTag(), LocaleLength);
     }
 
 }

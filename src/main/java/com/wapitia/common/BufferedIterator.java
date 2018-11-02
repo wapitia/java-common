@@ -34,11 +34,21 @@ public class BufferedIterator<A> implements Iterator<A> {
             : Optional.empty();
     }
 
+    /** Determine if the iterator has more elements.
+     *
+     *  @return true if there is next item.
+     *  @see java.util.Iterator#hasNext()
+     */
     @Override
     public boolean hasNext() {
         return nextOpt.isPresent();
     }
 
+    /** Return the next element
+     *
+     *  @return The next element
+     *  @see java.util.Iterator#next()
+     */
     @Override
     public A next() {
         A result = nextOpt.get();
