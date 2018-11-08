@@ -2,10 +2,14 @@ package com.wapitia.common;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
+import java.util.function.Consumer;
 import java.util.function.Function;
+import java.util.function.Predicate;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
@@ -172,6 +176,71 @@ public class Collections {
         else
             throw new RuntimeException("List has multiple elements.");
         return result;
+    }
+
+
+    /** Get or make a new item by the getter, creating a new one if
+     *  getter returns null, and setting the value via the setter if created.
+     *
+     *  @param getter Supplier of a collection, which may return null
+     *  @param setter called only if getter returns null and creator returns
+     *              a new collection. May be null, in which case setting is ignored.
+     *  @param creator called only when getter returns null.
+     *  @return The made item
+     */
+    public static <T> T getOrMake(Supplier<T> getter, Consumer<T> setter, Supplier<T> creator) {
+        return Optional.<T> ofNullable(getter.get())
+            .orElseGet(() -> {
+                final T t = creator.get();
+                if (setter != null) {
+                    setter.accept(t);
+                }
+                return t;
+            });
+    }
+
+    /** Add a new item to a Collection supplied by a getter. Call the setter with
+     *  a new Collection given by the creator if getter returns null.
+     *  Call setter if a new Collection was made.
+     *
+     *  @param item item to add to collection
+     *  @param getter Supplier of a collection, which may return null
+     *  @param setter called only if getter returns null and creator returns
+     *              a new collection. May be null, in which case setting is ignored.
+     *  @param creator called only when getter returns null.
+     *  @return the original item
+     */
+    public static <T, C extends Collection<T>> T addToCollection(T item, Supplier<C> getter, Consumer<C> setter, Supplier<C> creator) {
+        Collections.<C> getOrMake(getter, setter, creator).add(item);
+        return item;
+    }
+
+
+    /** Add a new item to a set supplied by a getter. Call the setter with
+     *  a new Hashset if getter returns null.
+     *  @param item item to add to collection
+     *  @param getter Supplier of a collection, which may return null
+     *  @param setter called only if getter returns null and creator returns
+     *              a new collection. May be null, in which case setting is ignored.
+     *  @return the original item
+     */
+    public static <T> T addToSet(T item, Supplier<Set<T>> getter, Consumer<Set<T>> setter) {
+        addToCollection(item, getter, setter, HashSet<T>::new);
+        return item;
+    }
+
+    /** Find the first item in a collection that matches some filter predicate.
+     *  Return empty if none found, or if collection is null or empty.
+     *
+     *  @param by predicate to filter collection items.
+     *  @param coll May be null
+     *  @return First found IdEntity item, or empty if none found.
+     */
+    public static <T> Optional<T> findFirstBy(Predicate<T> by, Collection<T> coll) {
+        return coll == null ? Optional.<T> empty()
+            : coll.stream()
+                .filter(by)
+                .findFirst();
     }
 
     /** Factory class is not to be instantiated */
