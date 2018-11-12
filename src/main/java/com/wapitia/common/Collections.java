@@ -167,17 +167,34 @@ public class Collections {
      *  @return Some first element of list or None if list is empty.
      *  @throws RuntimeException if there are multiple items in the list
      */
-    public static <A> Optional<A> asSingleton(List<A> list) {
+    public static <A> Optional<A> asSingleton(Collection<A> list) {
         final Optional<A> result;
         if (list.isEmpty())
             result = Optional.empty();
         else if (list.size() == 1)
-            result = Optional.of(list.get(0));
+            result = Optional.of(list.iterator().next());
         else
-            throw new RuntimeException("List has multiple elements.");
+            throw new MultipleElementException("List has multiple elements.");
         return result;
     }
 
+    /** Wrap an optional as a List of 0 or 1 items.
+     * @param opt the optional item to wrap in a list
+     * @return singletonList of item, or emptyList if opt is empty.
+     */
+    public static <A> List<A> singletonList(Optional<A> opt) {
+        return opt.map(java.util.Collections::<A> singletonList)
+                  .orElse(java.util.Collections.<A> emptyList());
+    }
+
+    /** Wrap an optional as a Set of 0 or 1 items.
+     * @param opt the optional item to wrap in a Set
+     * @return singleton Set of item, or emptySet if opt is empty.
+     */
+    public static <A> Set<A> singletonSet(Optional<A> opt) {
+        return opt.map(java.util.Collections::<A> singleton)
+                  .orElse(java.util.Collections.<A> emptySet());
+    }
 
     /** Get or make a new item by the getter, creating a new one if
      *  getter returns null, and setting the value via the setter if created.
@@ -215,6 +232,16 @@ public class Collections {
         return item;
     }
 
+    /** Create and return a set given by the getter.
+     *  @param getter Supplier of a collection, which may return null
+     *  @param setter called only if getter returns null and creator returns
+     *              a new collection. May be null, in which case setting is ignored.
+     *  @return the gotten or made Set
+     */
+    public static <T> Set<T> getOrMakeSet(Supplier<Set<T>> getter, Consumer<Set<T>> setter) {
+        final Set<T> resultSet = getOrMake(getter, setter, HashSet<T>::new);
+        return resultSet;
+    }
 
     /** Add a new item to a set supplied by a getter. Call the setter with
      *  a new Hashset if getter returns null.
@@ -226,6 +253,31 @@ public class Collections {
      */
     public static <T> T addToSet(T item, Supplier<Set<T>> getter, Consumer<Set<T>> setter) {
         addToCollection(item, getter, setter, HashSet<T>::new);
+        return item;
+    }
+
+
+    /** Create and return a List given by the getter.
+     *  @param getter Supplier of a collection, which may return null
+     *  @param setter called only if getter returns null and creator returns
+     *              a new collection. May be null, in which case setting is ignored.
+     *  @return the gotten or made List
+     */
+    public static <T> List<T> getOrMakeList(Supplier<List<T>> getter, Consumer<List<T>> setter) {
+        final List<T> resultSet = getOrMake(getter, setter, ArrayList<T>::new);
+        return resultSet;
+    }
+
+    /** Add a new item to a List supplied by a getter. Call the setter with
+     *  a new ArrayList if getter returns null.
+     *  @param item item to add to List
+     *  @param getter Supplier of a List, which may return null
+     *  @param setter called only if getter returns null and creator returns
+     *              a new List. May be null, in which case setting is ignored.
+     *  @return the original item
+     */
+    public static <T> T addToList(T item, Supplier<List<T>> getter, Consumer<List<T>> setter) {
+        addToCollection(item, getter, setter, ArrayList<T>::new);
         return item;
     }
 
