@@ -23,7 +23,7 @@ public class Tuple2<T1,T2> {
     private T2 second;
 
     /**
-     * Get the index of the item at the 0-based index.
+     * Get the item at the 0-based index.
      *
      * @param <T> expected type of return value
      * @param index index must be 0 or 1.

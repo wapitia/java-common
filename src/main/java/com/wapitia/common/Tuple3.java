@@ -28,12 +28,12 @@ public class Tuple3<T1,T2,T3> {
 
 
     /**
-     * Get the index of the item at the 0-based index.
+     * Get the item at the 0-based index.
      *
      * @param <T> expected type of return value
      * @param index index must be 0 or 1.
-     * @return first if index is 0, second if index is 1.
-     * @throws IndexOutOfBoundsException when index is not in range (0..1)
+     * @return first if index is 0, second if index is 1, third if index is 2
+     * @throws IndexOutOfBoundsException when index is not in range (0..2)
      * @throws ClassCastException when the item object's type does not match
      *            the type {@code <T>} of the result
      */
@@ -52,10 +52,10 @@ public class Tuple3<T1,T2,T3> {
      * Copy this tuple into a new tuple substituting one item at
      * a chosen index. The item must be an instance of that tuple slot's type.
      *
-     * @param index index must be 0 or 1.
+     * @param index index must be 0, 1 or 2.
      * @param item substituting item
      * @return A new Tuple3 with one substitution
-     * @throws IndexOutOfBoundsException when index is not in range (0..1)
+     * @throws IndexOutOfBoundsException when index is not in range (0..2)
      * @throws ClassCastException when the item object's type does not match
      *            the type of the slot it's replacing
      */
