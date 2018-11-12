@@ -16,7 +16,7 @@ public class Streams {
      * @param <A> Item type of first iterator.
      * @param <B> Item type of second iterator.
      */
-    public static class PairIterator<A,B> implements Iterator<Pair<A,B>> {
+    public static class PairIterator<A,B> implements Iterator<Tuple2<A,B>> {
 
         private final Iterator<A> aiter;
         private final Iterator<B> biter;
@@ -42,19 +42,19 @@ public class Streams {
         }
 
         /** Returns the next elements of stream {@code aiter} and stream
-         *  {@code biter} as a {@link Pair} of items.
+         *  {@code biter} as a {@link Tuple2} of items.
          *
          * @return a {@code Pair<A,B>} containing the next of both iterators.
          */
         @Override
-        public Pair<A, B> next() {
-            return new Pair<A,B>(aiter.next(), biter.next());
+        public Tuple2<A, B> next() {
+            return Tuple2.<A,B> of(aiter.next(), biter.next());
         }
 
     }
 
     /** Create and return an iterator which consumes the paired items of its two
-     *  input iterators, where the resultant iterator produces {@link Pair}s
+     *  input iterators, where the resultant iterator produces {@link Tuple2}s
      *  of each item.
      *  The iterator finishes when either iterator is empty.
      *  If the iterators are not the same length, then the longest will
@@ -64,7 +64,7 @@ public class Streams {
      *  @param biter Second iterator with items of type {@code B}
      *  @return a new Iterator consuming both input iterators
      */
-    public static <A,B> Iterator<Pair<A,B>> zip(Iterator<A> aiter, Iterator<B> biter) {
+    public static <A,B> Iterator<Tuple2<A,B>> zip(Iterator<A> aiter, Iterator<B> biter) {
         Objects.requireNonNull(aiter);
         Objects.requireNonNull(biter);
 
@@ -72,7 +72,7 @@ public class Streams {
     }
 
     /** Create and return a stream which consumes the paired items of its two
-     *  input streams, where the resultant stream produces {@link Pair}s
+     *  input streams, where the resultant stream produces {@link Tuple2}s
      *  of each item.
      *  The stream finishes when either stream is empty.
      *  If the streams are not the same length, then the longest will
@@ -82,11 +82,11 @@ public class Streams {
      *  @param bstrm Second stream with items of type {@code B}
      *  @return a new Stream consuming both input streams.
      */
-    public static <A,B> Stream<Pair<A,B>> zip(Stream<A> astrm, Stream<B> bstrm) {
+    public static <A,B> Stream<Tuple2<A,B>> zip(Stream<A> astrm, Stream<B> bstrm) {
         Objects.requireNonNull(astrm);
         Objects.requireNonNull(bstrm);
 
-        Iterator<Pair<A,B>> iterator = zip(astrm.iterator(), bstrm.iterator());
+        Iterator<Tuple2<A,B>> iterator = zip(astrm.iterator(), bstrm.iterator());
 
         return StreamSupport.stream(Spliterators.spliteratorUnknownSize(
                 iterator,
