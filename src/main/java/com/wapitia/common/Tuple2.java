@@ -99,7 +99,7 @@ public class Tuple2<T1,T2> {
      *
      * @return a new tuple with the results of applying the function pair.
      */
-    public <R1,R2> Tuple2<R1,R2> apply(Function<T1,R1> afunc, Function<T2,R2> bfunc) {
+    public <R1,R2> Tuple2<R1,R2> map(Function<T1,R1> afunc, Function<T2,R2> bfunc) {
         return Tuple2.of(
             Optional.ofNullable(afunc).map(af -> af.apply(first)).orElse(null),
             Optional.ofNullable(bfunc).map(bf -> bf.apply(second)).orElse(null) );
@@ -116,12 +116,13 @@ public class Tuple2<T1,T2> {
      * @param funcs pair of functions for first, second
      * @return a new tuple with the results of applying the function pair.
      */
-    public <R1,R2> Tuple2<R1,R2> apply(Tuple2<Function<T1,R1>,Function<T2,R2>> funcs) {
-        return apply(funcs.first(), funcs.second());
+    public <R1,R2> Tuple2<R1,R2> map(Tuple2<Function<T1,R1>,Function<T2,R2>> funcs) {
+        return map(funcs.first(), funcs.second());
     }
 
     /**
      * Create a list of two elements from tuple elements that are similar types.
+     *
      * @param <A> common type of tuple items.
      * @param sameTuple tuple to convert to List.
      * @return List.of(first,second)
@@ -130,4 +131,27 @@ public class Tuple2<T1,T2> {
         return Arrays.asList(sameTuple.first(), sameTuple.second());
     }
 
+    /**
+     * Accept the same consumer for each element in a tuple having similar types.
+     *
+     * @param <A> common type of tuple items.
+     * @param sameTuple similar tuple to apply each item to consumer
+     * @param consumer consumer taking each element in turn
+     */
+    public static <A> void forEach(Tuple2<A,A> sameTuple, Consumer<A> consumer) {
+        sameTuple.accept(consumer, consumer);
+    }
+
+    /**
+     * Map the same function to each element in a tuple having similar types.
+     *
+     * @param <A> common type of tuple items.
+     * @param <R> result type of returned tuple.
+     * @param sameTuple similar tuple to apply each item to function
+     * @param func function taking each similar element in turn
+     * @return a new Tuple with similar mapped values
+     */
+    public static <A,R> Tuple2<R,R> map(Tuple2<A,A> sameTuple, Function<A,R> func) {
+        return sameTuple.map(func, func);
+    }
 }
