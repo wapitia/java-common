@@ -196,10 +196,27 @@ public class Collections {
                   .orElse(java.util.Collections.<A> emptySet());
     }
 
+
+    /** Get or make a new item by the attr getter, creating a new one if
+     *  getter returns null, and setting the value via the setter if created.
+     *
+     *  @param attr Concrete attribute Supplier of getter, setter functions
+     *  @param creator called only when getter returns null.
+     *  @return The made item
+     */
+    public static <T> T getOrMake(CAttr<T> attr, Supplier<T> creator) {
+        return Optional.<T> ofNullable(attr.get())
+            .orElseGet(() -> {
+                final T t = creator.get();
+                attr.set(t);
+                return t;
+            });
+    }
+
     /** Get or make a new item by the getter, creating a new one if
      *  getter returns null, and setting the value via the setter if created.
      *
-     *  @param getter Supplier of a collection, which may return null
+     *  @param getter Supplier of an instance, which may return null
      *  @param setter called only if getter returns null and creator returns
      *              a new collection. May be null, in which case setting is ignored.
      *  @param creator called only when getter returns null.
@@ -232,6 +249,20 @@ public class Collections {
         return item;
     }
 
+    /** Add a new item to a Collection supplied by a getter. Call the setter with
+     *  a new Collection given by the creator if getter returns null.
+     *  Call setter if a new Collection was made.
+     *
+     *  @param item item to add to collection
+     *  @param attr Concrete attribute Supplier of getter, setter functions
+     *  @param creator called only when getter returns null.
+     *  @return the original item
+     */
+    public static <T, C extends Collection<T>> T addToCollection(T item, CAttr<C> attr, Supplier<C> creator) {
+        Collections.<C> getOrMake(attr, creator).add(item);
+        return item;
+    }
+
     /** Create and return a set given by the getter.
      *  @param getter Supplier of a collection, which may return null
      *  @param setter called only if getter returns null and creator returns
@@ -240,6 +271,15 @@ public class Collections {
      */
     public static <T> Set<T> getOrMakeSet(Supplier<Set<T>> getter, Consumer<Set<T>> setter) {
         final Set<T> resultSet = getOrMake(getter, setter, HashSet<T>::new);
+        return resultSet;
+    }
+
+    /** Create and return a set given by the getter.
+     *  @param setAttr Getter/Setter of a set attribute
+     *  @return the gotten or made Set
+     */
+    public static <T> Set<T> getOrMakeSet(CAttr<Set<T>> setAttr) {
+        final Set<T> resultSet = getOrMake(setAttr, HashSet<T>::new);
         return resultSet;
     }
 
@@ -256,6 +296,16 @@ public class Collections {
         return item;
     }
 
+    /** Add a new item to a set supplied by a getter. Call the setter with
+     *  a new Hashset if getter returns null.
+     *  @param item item to add to collection
+     *  @param setAttr Getter/Setter of a set attribute
+     *  @return the original item
+     */
+    public static <T> T addToSet(T item, CAttr<Set<T>> setAttr) {
+        addToCollection(item, setAttr, HashSet<T>::new);
+        return item;
+    }
 
     /** Create and return a List given by the getter.
      *  @param getter Supplier of a collection, which may return null
@@ -265,6 +315,15 @@ public class Collections {
      */
     public static <T> List<T> getOrMakeList(Supplier<List<T>> getter, Consumer<List<T>> setter) {
         final List<T> resultSet = getOrMake(getter, setter, ArrayList<T>::new);
+        return resultSet;
+    }
+
+    /** Create and return a List given by the getter.
+     *  @param listAttr Getter/Setter of a List attribute
+     *  @return the gotten or made List
+     */
+    public static <T> List<T> getOrMakeList(CAttr<List<T>> listAttr) {
+        final List<T> resultSet = getOrMake(listAttr, ArrayList<T>::new);
         return resultSet;
     }
 
@@ -278,6 +337,17 @@ public class Collections {
      */
     public static <T> T addToList(T item, Supplier<List<T>> getter, Consumer<List<T>> setter) {
         addToCollection(item, getter, setter, ArrayList<T>::new);
+        return item;
+    }
+
+    /** Add a new item to a List supplied by a getter. Call the setter with
+     *  a new ArrayList if getter returns null.
+     *  @param item item to add to List
+     *  @param listAttr Getter/Setter of a List attribute
+     *  @return the original item
+     */
+    public static <T> T addToList(T item, CAttr<List<T>> listAttr) {
+        addToCollection(item, listAttr, ArrayList<T>::new);
         return item;
     }
 
