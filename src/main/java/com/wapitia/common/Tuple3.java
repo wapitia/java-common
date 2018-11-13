@@ -1,5 +1,7 @@
 package com.wapitia.common;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.function.Function;
@@ -131,5 +133,17 @@ public class Tuple3<T1,T2,T3> {
     public <R1,R2,R3> Tuple3<R1,R2,R3> apply(Tuple3<Function<T1,R1>,Function<T2,R2>,Function<T3,R3>> funcs) {
         return apply(funcs.first(), funcs.second(), funcs.third());
     }
+
+    /**
+     * Create a list of three elements from tuple elements that are similar types.
+     *
+     * @param <A> common type of tuple items.
+     * @param sameTuple tuple to convert to List.
+     * @return List.of(first,second,third)
+     */
+    public static <A> List<A> toList(Tuple3<A,A,A> sameTuple) {
+        return Arrays.asList(sameTuple.first(), sameTuple.second(), sameTuple.third());
+    }
+
 
 }

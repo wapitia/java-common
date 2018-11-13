@@ -1,5 +1,7 @@
 package com.wapitia.common;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.function.Function;
@@ -117,4 +119,15 @@ public class Tuple2<T1,T2> {
     public <R1,R2> Tuple2<R1,R2> apply(Tuple2<Function<T1,R1>,Function<T2,R2>> funcs) {
         return apply(funcs.first(), funcs.second());
     }
+
+    /**
+     * Create a list of two elements from tuple elements that are similar types.
+     * @param <A> common type of tuple items.
+     * @param sameTuple tuple to convert to List.
+     * @return List.of(first,second)
+     */
+    public static <A> List<A> toList(Tuple2<A,A> sameTuple) {
+        return Arrays.asList(sameTuple.first(), sameTuple.second());
+    }
+
 }
