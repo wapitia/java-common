@@ -124,35 +124,35 @@ public class Tuple2<T1,T2> {
     /**
      * Create a list of two elements from tuple elements that are similar types.
      *
-     * @param <A> common type of tuple items.
+     * @param <T> common type of tuple items.
      * @param sameTuple tuple to convert to List.
      * @return List.of(first,second)
      */
-    public static <A> List<A> toList(Tuple2<A,A> sameTuple) {
+    public static <T> List<T> toList(Tuple2<T,T> sameTuple) {
         return Arrays.asList(sameTuple.first(), sameTuple.second());
     }
 
     /**
      * Accept the same consumer for each element in a tuple having similar types.
      *
-     * @param <A> common type of tuple items.
+     * @param <T> common type of tuple items.
      * @param sameTuple similar tuple to apply each item to consumer
      * @param consumer consumer taking each element in turn
      */
-    public static <A> void forEach(Tuple2<A,A> sameTuple, Consumer<A> consumer) {
+    public static <T> void forEach(Tuple2<T,T> sameTuple, Consumer<T> consumer) {
         sameTuple.accept(consumer, consumer);
     }
 
     /**
      * Map the same function to each element in a tuple having similar types.
      *
-     * @param <A> common type of tuple items.
+     * @param <T> common type of tuple items.
      * @param <R> result type of returned tuple.
      * @param sameTuple similar tuple to apply each item to function
      * @param func function taking each similar element in turn
      * @return a new Tuple with similar mapped values
      */
-    public static <A,R> Tuple2<R,R> map(Tuple2<A,A> sameTuple, Function<A,R> func) {
+    public static <T,R> Tuple2<R,R> mapTuple(Tuple2<T,T> sameTuple, Function<T,R> func) {
         return sameTuple.map(func, func);
     }
 
@@ -168,7 +168,18 @@ public class Tuple2<T1,T2> {
      * @param func function taking each similar element in turn of each tuple.
      * @return a new Tuple with similar mapped values
      */
-    public static <A,B,R> Tuple2<R,R> map(Tuple2<A,A> tupleA, Tuple2<B,B> tupleB, BiFunction<A,B,R> func) {
+    public static <A,B,R> Tuple2<R,R> mapTuple(Tuple2<A,A> tupleA, Tuple2<B,B> tupleB, BiFunction<A,B,R> func) {
         return Tuple2.of(func.apply(tupleA.first(), tupleB.first()), func.apply(tupleA.second(), tupleB.second()));
     }
+
+    /**
+     * Create a tuple whose first and second elements are the same type.
+     * @param first first tuple element
+     * @param second scond tuple element
+     * @return a new tuple
+     */
+    public static <T> Tuple2<T,T> ofSame(T first, T second) {
+        return of(first,second);
+    }
+
 }

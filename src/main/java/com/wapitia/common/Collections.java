@@ -165,7 +165,7 @@ public class Collections {
      *
      *  @param list Collection from which to pull the first element. must not be null.
      *  @return Some first element of list or None if list is empty.
-     *  @throws RuntimeException if there are multiple items in the list
+     *  @throws MultipleElementException if there are multiple items in the list
      */
     public static <A> Optional<A> asSingleton(Collection<A> list) {
         final Optional<A> result;
