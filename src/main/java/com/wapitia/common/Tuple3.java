@@ -3,6 +3,7 @@ package com.wapitia.common;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.BiFunction;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
@@ -167,6 +168,24 @@ public class Tuple3<T1,T2,T3> {
      */
     public static <A,R> Tuple3<R,R,R> map(Tuple3<A,A,A> sameTuple, Function<A,R> func) {
         return sameTuple.map(func, func, func);
+    }
+
+
+    /**
+     * Merge two Tuples into a result tuple, applying the BiFunction to each
+     * similar item in the tuple.
+     *
+     * @param <A> common type of tuple A.
+     * @param <B> common type of tuple B.
+     * @param <R> result type of returned tuple.
+     * @param tupleA similar tuple to apply each item to function argument 1
+     * @param tupleB similar tuple to apply each item to function argument 2
+     * @param func function taking each similar element in turn of each tuple.
+     * @return a new Tuple with similar mapped values
+     */
+    public static <A,B,R> Tuple3<R,R,R> map(Tuple3<A,A,A> tupleA, Tuple3<B,B,B> tupleB, BiFunction<A,B,R> func) {
+        return Tuple3.of(func.apply(tupleA.first(), tupleB.first()), func.apply(tupleA.second(), tupleB.second()),
+            func.apply(tupleA.third(), tupleB.third()) );
     }
 
 }
