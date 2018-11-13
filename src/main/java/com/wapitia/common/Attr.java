@@ -3,7 +3,7 @@ package com.wapitia.common;
 import lombok.Value;
 
 /**
- * Wrappes the getter and setter functions for an attribute in a container.
+ * Wraps the getter and setter functions for an attribute in a container.
  *
  * @param <A> Getter/Setter Attribute type
  * @param <C> Class or container type
@@ -40,7 +40,7 @@ public class Attr<A,C> {
          * @param value value to set
          * @param container the container with the attribute.
          */
-        void set(A value, C container);
+        void set(C container, A value);
     }
 
     private final GETTER<A,C> getter;
@@ -67,7 +67,7 @@ public class Attr<A,C> {
      * @param value value to set
      * @param container the container with the attribute.
      */
-    public void set(A value, C container) {
-        if (setter != null) setter.set(value, container);
+    public void set(C container, A value) {
+        if (setter != null) setter.set(container, value);
     }
 }
