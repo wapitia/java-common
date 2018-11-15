@@ -29,6 +29,21 @@ public class Strings {
             return s.substring(0, size);
     }
 
+    /** Return the rightmost {@code size} characters of String {@code s},
+     *  unless s is equal to or shorter than {@code size} or is null,
+     *  in which case s is returned unchanged.
+     *
+     *  @param size maximum size of string to return
+     *  @param s string to check
+     *  @return the right-most size characters of s, or null if s is null.
+     */
+    public static String rightmost(int size, String s) {
+        if (s == null || s.length() <= size)
+            return s;
+        else
+            return s.substring(s.length() - size);
+    }
+
     /** Constructor is private as this is a factory class. */
     private Strings() {}
 
