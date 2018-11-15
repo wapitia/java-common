@@ -365,6 +365,27 @@ public class Collections {
                 .findFirst();
     }
 
+    /**
+     * Apply a function to an item only if that item is {@code null},
+     * otherwise return {@code null}.
+     *
+     * @param <T> item type, and type of argument for {@code func}
+     * @param <U> function result type
+     * @param item input which may be {@code null}
+     * @param func function to call only if {@code item} is {@code null}.
+     * @return function result, or {@code null} if item is {@code null}.
+     */
+    public static <T,U> U safe(T item, Function<T,U> func) {
+        final U result;
+        if (item == null) {
+            result = null;
+        }
+        else {
+            result = func.apply(item);
+        }
+        return result;
+    }
+
     /** Factory class is not to be instantiated */
     private Collections() {}
 }
