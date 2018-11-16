@@ -114,9 +114,9 @@ public class Tuple3<T1,T2,T3> {
      */
     public <R1,R2,R3> Tuple3<R1,R2,R3> map(Function<T1,R1> afunc, Function<T2,R2> bfunc, Function<T3,R3> cfunc) {
         return Tuple3.of(
-            Optional.ofNullable(afunc).map(af -> af.apply(first)).orElse(null),
-            Optional.ofNullable(bfunc).map(bf -> bf.apply(second)).orElse(null),
-            Optional.ofNullable(cfunc).map(cf -> cf.apply(third)).orElse(null) );
+            Collections.safe(afunc, af -> af.apply(first)),
+            Collections.safe(bfunc, bf -> bf.apply(second)),
+            Collections.safe(cfunc, cf -> cf.apply(third)) );
     }
 
     /**

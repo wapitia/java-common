@@ -2,7 +2,6 @@ package com.wapitia.common;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
 import java.util.function.BiFunction;
 import java.util.function.Consumer;
 import java.util.function.Function;
@@ -102,8 +101,8 @@ public class Tuple2<T1,T2> {
      */
     public <R1,R2> Tuple2<R1,R2> map(Function<T1,R1> afunc, Function<T2,R2> bfunc) {
         return Tuple2.of(
-            Optional.ofNullable(afunc).map(af -> af.apply(first)).orElse(null),
-            Optional.ofNullable(bfunc).map(bf -> bf.apply(second)).orElse(null) );
+            Collections.safe(afunc, af -> af.apply(first)),
+            Collections.safe(bfunc, bf -> bf.apply(second)) );
     }
 
     /**
