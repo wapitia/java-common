@@ -386,6 +386,51 @@ public class Collections {
         return result;
     }
 
+    /**
+     * Return true if the given collection is {@code null}
+     * or {@link Collection#isEmpty() empty}.
+     *
+     * @param <T> collection element type
+     * @param collection to test, may be null
+     * @return true if collection is null or empty
+     */
+    public static <T> boolean isEmpty(Collection<T> collection) {
+        if (collection == null) {
+            return true;
+        }
+        else {
+            return collection.isEmpty();
+        }
+    }
+
+    /**
+     * Return true if the given collection has exactly one element.
+     *
+     * @param <T> collection element type
+     * @param collection to test, may be null
+     * @return true if collection has just one item.
+     */
+    public static <T> boolean isSingleton(Collection<T> collection) {
+        if (collection == null) {
+            return false;
+        }
+        else {
+            return collection.size() == 1;
+        }
+    }
+
+
+    /**
+     * Return true if the given collection has any elements.
+     *
+     * @param <T> collection element type
+     * @param collection to test, may be null
+     * @return true if collection has one or more items.
+     */
+    public static <T> boolean hasItems(Collection<T> collection) {
+        return ! isEmpty(collection);
+    }
+
     /** Factory class is not to be instantiated */
     private Collections() {}
 }
